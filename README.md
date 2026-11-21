@@ -1,39 +1,3 @@
-# Composite-Wing-UD-vs-Twill-Woven-Laminate-Comparison
-### 1. Hashin vs. Puck Comparison: Unidirectional (`UD`) vs. `2x2 Twill` Woven
-
-Both **Hashin** and **Puck** separate fibre breakage from epoxy matrix failure, but changing from **Unidirectional (`UD`)** tape to **`2x2 Twill` Woven** fabric fundamentally alters which failure mode governs the wing root:
-
-| Failure Mode / Parameter | Run A: Unidirectional (`UD`) `[0 / 25 / 0 / 25]s` | Run B: `2x2 Twill` Woven `[0 / 45 / 0 / 45]s` | Physical & Structural Difference |
-| --- | --- | --- | --- |
-| **Transverse Tensile Limit ($Y_t$)** | **`29 MPa`** *(unreinforced resin/interface)* | **`805 MPa`** *(reinforced by weft carbon tows)* | Woven fabric eliminates the weak transverse resin path (`27.7×` higher $Y_t$). |
-| **In-Plane Shear Limit ($S_{12}$)** | **`60 MPa`** | **`125 MPa`** | Interlocked warp/weft yarns and `45°` plies more than double in-plane shear strength. |
-| **Hashin Fibre Modes (`hf`: Tension / Compression)** | **Safe (`IRF < 1.0` in FEA; `0.56` in `0°` plies)** — $2231\text{ MPa}$ tensile strength easily carries bending. | **Safe (`IRF << 1.0`)** — Peak root equivalent stress is only `55.16 MPa` vs. `805 MPa` tensile / `509 MPa` compressive limits.
-
- | Neither laminate breaks carbon fibres at `250 N`; failure in Run A is strictly matrix-driven. |
-| **Hashin Matrix Tension (`hm`, $\sigma_2 \ge 0$)** | **Critical Failure Mode (`IRF > 1.0`)** — Off-axis `25°` plies develop transverse tension + shear that exceed $Y_t = 29\text{ MPa}$ and $S_{12} = 60\text{ MPa}$. | **Safe (`IRF < 0.25`)** — Transverse stress $\sigma_2$ is carried by `90°` weft fibres rather than bare epoxy. | **Primary reason Run A fails while Run B survives** with a `4.16` safety factor.
-
- |
-| **Hashin Matrix Compression (`hm`, $\sigma_2 < 0$)** | **Moderate at root compression skin** — Restrained Poisson contraction creates compressive $\sigma_2$ and shear near the fixed root. | **Negligible** — Closed shell distributes compressive bending stress evenly (`< 56 MPa`).
-
- | Closed-shell geometry + woven transverse strength suppresses compressive resin crushing. |
-| **Puck Fibre Failure (`pf`)** | **Safe** — Accounts for Poisson magnification ($m_{\sigma f} \approx 1.1$), still well below `2231 MPa` limit. | **Safe** — Low longitudinal strain across all 8 plies. | Consistent with Hashin `hf`. |
-| **Puck Mode A (`pmA`: $\sigma_2 \ge 0$, $0^\circ$ crack plane)** | **Governing Inter-Fibre Failure (IFF)** — Transverse tension opens cracks parallel to the `25°` fibres through the ply thickness. | **Non-critical (`IRF << 1.0`)** — Bidirectional weave prevents continuous $0^\circ$ inter-fibre splitting. | Mirrors Hashin matrix tension (`hm`), pinpointing resin cracking in `25°` UD plies. |
-| **Puck Mode B (`pmB`: moderate $\sigma_2 < 0$)** | **Active on upper compression skin** — Moderate transverse compression clamps micro-cracks shut, raising shear capacity via internal friction (`p21(-) = 0.275`).
-
- | **Safe** — Low shear-to-strength ratio ($\tau_{12} / S_{12}$). | Puck is less conservative than Hashin here because it credits compressive friction. |
-| **Puck Mode C (`pmC`: high $\sigma_2 < 0$, $\approx 53^\circ$ wedge)** | **Delamination Risk Indicator at Root Corner** — High compressive stress concentration at the fixed root can trigger an inclined wedge fracture that initiates ply delamination. | **Negligible** — Smooth stress distribution (`55.16 MPa` max) stays far below the `509 MPa` compressive threshold.
-
- | Key advantage of Puck over Hashin: flags inclined wedge delamination at clamped UD roots. |
-
-(Modelling note: Puck's fracture-plane theory was derived for unidirectional plies; in ANSYS Mechanical, applying Puck to `2x2 Twill` evaluates a homogenized orthotropic layer using `p12(+) = 0.325`, `p12(-) = 0.275`, `p22(+) = 0.225`, and `p22(-) = 0.225`, acting as a conservative combined shear/transverse check.)
-
----
-
-### 2. Updated Comparative `README.md` (Copy-Paste Ready)
-
-All image links have been removed with a note that screenshots are uploaded above, and `[CONFIRM]` tags have been resolved against your verified 20 Nov ANSYS runs (`0.15 mm` / `1.20 mm` thickness, closed shell vs. open skin, `11,488` elements, NACA 2412 `100 mm` chord $\times$ `500 mm` span, and Engineering Data constants):
-
-```markdown
 # Composite Wing: Unidirectional (UD) vs. 2x2 Twill Woven Laminate Comparison
 
 ANSYS ACP (Pre) + ANSYS Mechanical study of a NACA 2412 carbon-fibre wing section (`100 mm` chord, `500 mm` span) under a distributed `250 N` load, comparing an 8-ply unidirectional (`UD`) layup against an 8-ply `2x2 Twill` woven layup. Includes Classical Laminate Theory (CLT) hand checks (`hand_calc/clt_check.py`), kinematic tip-twist calculations, and ply failure assessments using **Maximum Stress**, **Tsai-Wu**, **Hashin**, and **Puck** criteria.
@@ -159,5 +123,3 @@ Using root bending moment $M = F L / 2 = 62.5\text{ N}\cdot\text{m}$ and linear 
 
 * `README.md` — Comparative technical documentation and failure analysis.
 * `hand_calc/clt_check.py` — Python script (`numpy`) computing CLT stiffness matrices, open/closed beam deflections, linear root ply IRFs, and tip twist angles.
-
-```
